@@ -1,0 +1,26 @@
+#include <stdlib.h>
+#include <string.h>
+
+char* convert(char* s, int numRows) {
+    int len = (int)strlen(s);
+    char* result = (char*)malloc((size_t)len + 1);
+    if (numRows <= 1 || numRows >= len) {
+        strcpy(result, s);
+        return result;
+    }
+
+    int pos = 0;
+    int cycleLen = 2 * numRows - 2;
+
+    for (int row = 0; row < numRows; row++) {
+        for (int j = row; j < len; j += cycleLen) {
+            result[pos++] = s[j];
+            int diag = j + cycleLen - 2 * row;
+            if (row != 0 && row != numRows - 1 && diag < len) {
+                result[pos++] = s[diag];
+            }
+        }
+    }
+    result[pos] = '\0';
+    return result;
+}
