@@ -1,0 +1,34 @@
+#include <stdlib.h>
+#include <string.h>
+
+static void expandAroundCenter(const char* s, int len, int left, int right, int* bestStart, int* bestLen) {
+    while (left >= 0 && right < len && s[left] == s[right]) {
+        left--;
+        right++;
+    }
+    int currentLen = right - left - 1;
+    if (currentLen > *bestLen) {
+        *bestLen = currentLen;
+        *bestStart = left + 1;
+    }
+}
+
+char* longestPalindrome(char* s) {
+    int len = (int)strlen(s);
+    if (len == 0) {
+        char* empty = (char*)malloc(1);
+        empty[0] = '\0';
+        return empty;
+    }
+
+    int bestStart = 0, bestLen = 1;
+    for (int i = 0; i < len; i++) {
+        expandAroundCenter(s, len, i, i, &bestStart, &bestLen);
+        expandAroundCenter(s, len, i, i + 1, &bestStart, &bestLen);
+    }
+
+    char* ans = (char*)malloc((size_t)bestLen + 1);
+    memcpy(ans, s + bestStart, (size_t)bestLen);
+    ans[bestLen] = '\0';
+    return ans;
+}
